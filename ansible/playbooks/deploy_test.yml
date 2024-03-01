@@ -1,0 +1,18 @@
+---
+- name: Déployer sur l'environnement de test
+  hosts: test
+  become: yes
+
+  tasks:
+    - name: Arrêter l'ancienne version de l'application
+      command: systemctl stop mon_application_test
+
+    - name: Récupérer la dernière version depuis Git
+      git:
+        repo: "lien_vers_le_repo_git"
+        dest: "/chemin/vers/application"
+        version: test
+        force: yes
+
+    - name: Construire et déployer l'application
+      command: "grails clean && grails compile && grails run-app &"
